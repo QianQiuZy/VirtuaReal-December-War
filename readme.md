@@ -15,8 +15,7 @@ To get the application running on your local machine, follow these steps:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/bilibili-ranking-app.git
-   cd bilibili-ranking-app
+   git clone https://github.com/********
    ```
 
 2. **Create a virtual environment (optional but recommended):**
@@ -50,3 +49,6 @@ The application will start running on `http://localhost:2992` by default. You ca
 
 - **Avatar Endpoint:**
   `GET /avatar/<url>` - Returns the avatar image from the provided URL.
+
+## TODO
+- 一键跳转直播间打钱
