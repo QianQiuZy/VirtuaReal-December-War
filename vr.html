@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VirtuaReal December War</title>
+    <style>
+        .ranking-list {
+            margin-top: 20px;
+        }
+        .ranking-item {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;  /* 确保内容从左侧开始对齐 */
+            text-align: left;  /* 确保所有文本内容都从左侧开始对齐 */
+        }
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .ranking-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+        .ranking-info > div {
+            margin-right: 20px;
+            min-width: 100px;
+        }
+        .score-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: auto; 
+        }
+        .score {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: black;
+            margin-left: auto; 
+        }
+        .score-change-container {
+            width: 50%;
+            overflow-x: auto;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start; /* 左对齐 */
+            margin-left: auto; /* 将分数变化容器推到右侧 */
+        }
+        .score-change {
+            display: flex;
+            flex-direction: column;  /* Vertical alignment */
+            align-items: flex-end; /* Align to the left */
+            font-size: 0.9em;
+            color: gray;
+            margin-left: 10px;
+            margin-left: auto; 
+        }
+        .new-score {
+            color: green;
+        }
+        .decreased-score {
+            color: red;
+        }
+        .time {
+            font-size: 0.8em;
+            color: #888;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>VirtuaReal December War</h1>
+    <div id="rankingContainer" class="ranking-list"></div>
+
+    <script>
+        let previousRanking = [];
+        let previousChanges = {};  // To store score changes for each user
+
+        function fetchRankingData() {
+            fetch('/get_ranking')
+                .then(response => response.json())
+                .then(data => {
+                    const { ranking, users } = data;
+                    const rankingContainer = document.getElementById('rankingContainer');
+                    rankingContainer.innerHTML = '';  // Clear existing ranking data
+
+                    ranking.forEach((rank, index) => {
+                        const user = users[rank.uid];
+                        const listItem = document.createElement('div');
+                        listItem.classList.add('ranking-item');
+
+                        let scoreClass = '';
+                        let scoreDiff = '';
+                        let scoreTime = new Date().toLocaleTimeString();  // Current time for score update
+                        let changesList = previousChanges[rank.uid] || [];
+
+                        // Format score with comma separators
+                        const formattedScore = parseInt(rank.score).toLocaleString();
+
+                        // Only calculate the score difference if there's a previous ranking
+                        if (previousRanking[index]) {
+                            const previousScore = parseInt(previousRanking[index].score);
+                            const currentScore = parseInt(rank.score);
+                            const diff = currentScore - previousScore;
+
+                            // Show score difference only when the score has changed
+                            if (diff !== 0) {
+                                scoreClass = diff > 0 ? 'new-score' : 'decreased-score';
+                                scoreDiff = diff > 0 ? `+${diff}` : `${diff}`;
+                                // Save score change to track it
+                                changesList.unshift({ diff: scoreDiff, time: scoreTime });
+                            }
+                        }
+
+                        // Update user history with the current score changes
+                        previousChanges[rank.uid] = changesList;
+
+                        // Create the ranking information section
+                        const rankingInfo = document.createElement('div');
+                        rankingInfo.classList.add('ranking-info');
+                        rankingInfo.innerHTML = `
+                            <div>
+                                <img src="/avatar/${user.face}" alt="${user.uname}'s avatar" class="user-avatar">
+                            </div>
+                            <div>
+                                <strong>Rank ${rank.number}</strong> - ${user.uname}
+                            </div>
+                        `;
+                        listItem.appendChild(rankingInfo);
+
+                        // Add score container with formatted score
+                        const scoreContainer = document.createElement('div');
+                        scoreContainer.classList.add('score-container');
+                        scoreContainer.innerHTML = `
+                            <div class="score ${scoreClass} ">${formattedScore}</div>
+                        `;
+                        listItem.appendChild(scoreContainer);
+                        const scoreChangeContainer = document.createElement('div');
+                        scoreChangeContainer.classList.add('score-change-container');
+                        scoreChangeContainer.innerHTML = `
+                            <div class="score-change"></div>
+                        `;
+                        listItem.appendChild(scoreChangeContainer);
+                        changesList.forEach(change => {
+                            const scoreChangeInfo = document.createElement('div');
+                            scoreChangeInfo.classList.add('score-change');
+                            scoreChangeInfo.innerHTML = `
+                                <span class="${scoreClass}">${change.diff}</span>
+                                <span class="time">${change.time}</span>
+                            `;
+                            scoreChangeContainer.appendChild(scoreChangeInfo);
+                            scoreClass = "";
+                        });
+
+                        rankingContainer.appendChild(listItem);
+                    });
+
+                    // Store the current ranking to compare with the next one
+                    previousRanking = ranking;
+                })
+                .catch(error => {
+                    console.error('Error fetching ranking data:', error);
+                });
+        }
+
+        // Initial data fetch and then polling every 6 seconds
+        fetchRankingData();
+        setInterval(fetchRankingData, 6000);
+    </script>
+</body>
+</html>
