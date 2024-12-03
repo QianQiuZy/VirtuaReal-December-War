@@ -159,7 +159,7 @@
                             const scoreChangeInfo = document.createElement('div');
                             scoreChangeInfo.classList.add('score-change');
                             const relativeTime = getRelativeTime(change.time); // 计算相对时间
-                            console.log(relativeTime);
+
                             scoreChangeInfo.innerHTML = `
                                 <span class="${scoreClass}">${change.diff}</span>
                                 <span class="time">${relativeTime}</span>
