@@ -11,7 +11,7 @@ app = Flask(__name__, template_folder=os.getcwd())
 
 # API URL
 ranking_url = "https://api.live.bilibili.com/xlive/fuxi-interface/RankingController/getRanking?_ts_rpc_args_=[%7B%22id%22:15540,%22type%22:1,%22cursor%22:0,%22length%22:100,%22teamDimensionValue%22:1%7D]"
-user_info_url = "https://api.live.bilibili.com/xlive/fuxi-interface/UserService/getUserInfo?_ts_rpc_args_=[[56748733,7706705,690608698,1932862336,2039332008,434334701,1954091502,2124647716,1048135385,690608704,666726799,1609526545,6853766,14387072,529249,1323355750,690608691,477317922,434401868,392505232,1609795310,1711724633,1789460279,61639371,690608693,1116072703,2040984069,690608709,421267475,1570525137,472877684,558070433,1978590132,1296515170,2080519347,1297910179,12485637,2057377595,690608688,1694351351,1567394869,690608710,1405589619,176836079,480675481],false,%22%22]"
+user_info_url = "https://api.live.bilibili.com/xlive/fuxi-interface/UserService/getUserInfo?_ts_rpc_args_=[[1542516095,1827139579,56748733,7706705,690608698,1932862336,2039332008,434334701,1954091502,2124647716,1048135385,690608704,666726799,1609526545,6853766,14387072,529249,1323355750,690608691,477317922,434401868,392505232,1609795310,1711724633,1789460279,61639371,690608693,1116072703,2040984069,690608709,421267475,1570525137,472877684,558070433,1978590132,1296515170,2080519347,1297910179,12485637,2057377595,690608688,1694351351,1567394869,690608710,1405589619,176836079,480675481],false,%22%22]"
 
 # 初始化排名信息和用户信息
 ranking_data = []
@@ -43,24 +43,28 @@ def fetch_data():
     user_data = user_json['_ts_rpc_return_']['data']
 
     while True:
-        # 获取排名信息
-        ranking_response = requests.get(ranking_url, headers=headers)
+        try:
+            # 获取排名信息
+            ranking_response = requests.get(ranking_url, headers=headers)
 
-        if ranking_response.status_code != 200:
-            print(f"Error: {ranking_response.status_code}, {ranking_response.text}")
-        else:
-            try:
-                ranking_json = ranking_response.json()
-                if ranking_json['_ts_rpc_return_']['code'] == 0:
-                    ranking_data = ranking_json['_ts_rpc_return_']['data']['list']
-                else:
-                    print(f"API Error: {ranking_json['_ts_rpc_return_']['message']}")
-            except json.JSONDecodeError:
-                print("Error parsing JSON response")
+            if ranking_response.status_code != 200:
+                print(f"Error: {ranking_response.status_code}, {ranking_response.text}")
+            else:
+                try:
+                    ranking_json = ranking_response.json()
+                    if ranking_json['_ts_rpc_return_']['code'] == 0:
+                        ranking_data = ranking_json['_ts_rpc_return_']['data']['list']
+                    else:
+                        print(f"API Error: {ranking_json['_ts_rpc_return_']['message']}")
+                except json.JSONDecodeError:
+                    print("Error parsing JSON response")
 
-        # 获取用户信息
-        # 每3秒刷新一次
-        time.sleep(3)
+            # 获取用户信息
+            # 每3秒刷新一次
+            time.sleep(3)
+        except Exception as e:
+            print(e)
+
 
 # 启动线程来定期获取数据
 thread = Thread(target=fetch_data)

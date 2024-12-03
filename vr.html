@@ -78,9 +78,18 @@
     <div id="rankingContainer" class="ranking-list"></div>
 
     <script>
-        let previousRanking = [];
+        let previousScores = {};
         let previousChanges = {};  // To store score changes for each user
+        function getRelativeTime(pastTime) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - pastTime) / 1000);
 
+            if (diffInSeconds < 10) return '刚刚';
+            if (diffInSeconds < 60) return `${diffInSeconds}秒前`;
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}分钟前`;
+            
+            return pastTime.toLocaleTimeString(); // 超过一小时显示具体时间
+        }
         function fetchRankingData() {
             fetch('/get_ranking')
                 .then(response => response.json())
@@ -96,16 +105,16 @@
 
                         let scoreClass = '';
                         let scoreDiff = '';
-                        let scoreTime = new Date().toLocaleTimeString();  // Current time for score update
+                        let scoreTime = new Date();  // Current time for score update
                         let changesList = previousChanges[rank.uid] || [];
 
                         // Format score with comma separators
                         const formattedScore = parseInt(rank.score).toLocaleString();
 
+                        const currentScore = parseInt(rank.score);
                         // Only calculate the score difference if there's a previous ranking
-                        if (previousRanking[index]) {
-                            const previousScore = parseInt(previousRanking[index].score);
-                            const currentScore = parseInt(rank.score);
+                        if (previousScores[rank.uid]) {
+                            const previousScore = previousScores[rank.uid];
                             const diff = currentScore - previousScore;
 
                             // Show score difference only when the score has changed
@@ -116,9 +125,9 @@
                                 changesList.unshift({ diff: scoreDiff, time: scoreTime });
                             }
                         }
-
                         // Update user history with the current score changes
                         previousChanges[rank.uid] = changesList;
+                        previousScores[rank.uid] = currentScore
 
                         // Create the ranking information section
                         const rankingInfo = document.createElement('div');
@@ -149,9 +158,11 @@
                         changesList.forEach(change => {
                             const scoreChangeInfo = document.createElement('div');
                             scoreChangeInfo.classList.add('score-change');
+                            const relativeTime = getRelativeTime(change.time); // 计算相对时间
+                            console.log(relativeTime);
                             scoreChangeInfo.innerHTML = `
                                 <span class="${scoreClass}">${change.diff}</span>
-                                <span class="time">${change.time}</span>
+                                <span class="time">${relativeTime}</span>
                             `;
                             scoreChangeContainer.appendChild(scoreChangeInfo);
                             scoreClass = "";
@@ -159,9 +170,6 @@
 
                         rankingContainer.appendChild(listItem);
                     });
-
-                    // Store the current ranking to compare with the next one
-                    previousRanking = ranking;
                 })
                 .catch(error => {
                     console.error('Error fetching ranking data:', error);
