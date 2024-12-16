@@ -51,4 +51,5 @@ The application will start running on `http://localhost:2992` by default. You ca
   `GET /avatar/<url>` - Returns the avatar image from the provided URL.
 
 ## TODO
-- 一键跳转直播间打钱
+- [x] 一键跳转直播间打钱
+- [x] 显示开播状态
