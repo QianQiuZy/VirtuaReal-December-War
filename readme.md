@@ -1,55 +1,49 @@
-# VirtuaReal December War
+# VirtuaReal War
 
-This application is a simple Flask web server that fetches ranking and user information from VirtuaReal December War and serves it through a web interface.
+VR斗虫排行耪，每月最后一天24点清零
 
-## Table of Contents
+## 准备工作
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [License](#license)
-
-## Installation
-
-To get the application running on your local machine, follow these steps:
-
-1. **Clone the repository:**
+1. **下载代码:**
    ```bash
-   git clone https://github.com/********
+   git clone https://github.com/QianQiuZy/VirtuaReal-December-War
    ```
 
-2. **Create a virtual environment (optional but recommended):**
+2. **创建虚拟环境 (不强制但是建议):**
    ```bash
    python3 -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   source venv/bin/activate  # Windows端使用 `venv\Scripts\activate`
    ```
 
-3. **Install the dependencies:**
+3. **安装依赖:**
    ```bash
-   pip install Flask requests
+   pip install -r requirements.txt -i http://mirrors.cloud.tencent.com/pypi/simple
    ```
 
-## Usage
+4.**安装数据库**
+   (windows)[https://downloads.mysql.com/archives/get/p/25/file/mysql-installer-community-8.0.40.0.msi]
+   linux
+   ```bash
+   sudo apt install mysql-server # 安装数据库
+   sudo mysql -u root -p # 登入数据库
+   CREATE DATABASE harei;
+   CREATE USER 'user'@'localhost' IDENTIFIED BY 'password'; # 替换账户密码
+   GRANT ALL PRIVILEGES ON db.* TO 'user'@'localhost'; #替换数据库名和账户名
+   FLUSH PRIVILEGES;
+   EXIT;
+   ```
 
-Once the installation is complete, you can start the Flask application:
+5.**修改数据**
+   修改app.py中的SESSDATA字段保证链接稳定
+   修改app.py中的DB_CONFIG来连接数据库（保证账户名密码数据库名和上述命名时保持一致即可）
+   增加或去除主播：修改uid_list中的UID即可
 
-```bash
-python app.py
-```
-
-The application will start running on `http://localhost:2992` by default. You can access the web interface and API endpoints from there.
-
-## API Endpoints
-
-- **Root Endpoint:**
-  `GET /` - Returns the rendered HTML template of the VR page.
-
-- **Ranking Data Endpoint:**
-  `GET /get_ranking` - Returns the ranking data in JSON format.
-
-- **Avatar Endpoint:**
-  `GET /avatar/<url>` - Returns the avatar image from the provided URL.
+6.**运行**
+   ```bash
+   python app.py
+   ```
 
 ## TODO
 - [x] 一键跳转直播间打钱
 - [x] 显示开播状态
+- [x] VR斗虫——永无止境版开发完成（不依赖VR活动的cookie而是仅依靠B站官方的API）
