@@ -4,4 +4,3 @@ PyMySQL
 requests
 Pillow
 aiohttp
-blivedm
