@@ -21,7 +21,9 @@ VR斗虫排行耪，每月最后一天24点清零
    ```
 
 4.**安装数据库**
-   (windows)[https://downloads.mysql.com/archives/get/p/25/file/mysql-installer-community-8.0.40.0.msi]
+
+   [windows](https://downloads.mysql.com/archives/get/p/25/file/mysql-installer-community-8.0.40.0.msi)
+
    linux
    ```bash
    sudo apt install mysql-server # 安装数据库
@@ -34,6 +36,7 @@ VR斗虫排行耪，每月最后一天24点清零
    ```
 
 5.**修改数据**
+
    修改app.py中的SESSDATA字段保证链接稳定
    修改app.py中的DB_CONFIG来连接数据库（保证账户名密码数据库名和上述命名时保持一致即可）
    增加或去除主播：修改uid_list中的UID即可
