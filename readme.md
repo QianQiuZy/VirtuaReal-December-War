@@ -23,12 +23,21 @@ VR斗虫排行耪，每月最后一天24点清零
 4.**安装数据库**
 
    [windows](https://downloads.mysql.com/archives/get/p/25/file/mysql-installer-community-8.0.40.0.msi)
+   
+   ```bash
+   CREATE DATABASE db;
+   CREATE USER 'user'@'localhost' IDENTIFIED BY 'password'; # 替换账户密码
+   GRANT ALL PRIVILEGES ON db.* TO 'user'@'localhost'; #替换数据库名和账户名
+   FLUSH PRIVILEGES;
+   EXIT;
+   ```
 
    linux
+   
    ```bash
    sudo apt install mysql-server # 安装数据库
    sudo mysql -u root -p # 登入数据库
-   CREATE DATABASE harei;
+   CREATE DATABASE db;
    CREATE USER 'user'@'localhost' IDENTIFIED BY 'password'; # 替换账户密码
    GRANT ALL PRIVILEGES ON db.* TO 'user'@'localhost'; #替换数据库名和账户名
    FLUSH PRIVILEGES;
