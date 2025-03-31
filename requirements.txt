@@ -1,0 +1,7 @@
+Flask
+SQLAlchemy
+PyMySQL
+requests
+Pillow
+aiohttp
+blivedm
