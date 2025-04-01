@@ -292,8 +292,8 @@ def monthly_reset():
                 backup_month = yesterday.strftime("%Y-%m")
                 backup_data(backup_month)
                 # 避免重复触发，休眠70秒
-                time.sleep(3600)
-        time.sleep(300)
+                time.sleep(70)
+        time.sleep(30)
 
 # Flask 网站部分，前端保持之前样式，显示礼物、舰长、SC 和总计
 app = Flask(__name__, template_folder=os.getcwd())
