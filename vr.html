@@ -98,7 +98,6 @@
 </head>
 <body>
   <h1>维阿斗虫永不停息版（月榜）</h1>
-  <p>demo部署在hihivr.top上，关注向阳Hihi谢谢喵</p>
   <div id="rankingContainer" class="ranking-list"></div>
 
   <script>
@@ -129,10 +128,10 @@
           headerRow.innerHTML = `
             <div style="width: 10%;"></div>
             <div style="width: 30%;">主播</div>
-            <div style="width: 15%;">礼物</div>
-            <div style="width: 15%;">舰长</div>
-            <div style="width: 15%;">SC</div>
-            <div style="width: 15%;">总计</div>
+            <div style="width: 15%;text-align: center">礼物</div>
+            <div style="width: 15%;text-align: center">舰长</div>
+            <div style="width: 15%;text-align: center">SC</div>
+            <div style="width: 15%;text-align: center">总计</div>
           `;
           rankingContainer.appendChild(headerRow);
 
@@ -174,10 +173,10 @@
                 ${liveLink}
                 <div class="live-status ${liveStatusClass}">${liveStatusText}</div>
               </div>
-              <div style="width: 15%;">${rank.gift_total.toFixed(1)}</div>
-              <div style="width: 15%;">${rank.guard_total.toFixed(0)}</div>
-              <div style="width: 15%;">${rank.super_chat_total.toFixed(0)}</div>
-              <div style="width: 15%;">${rank.total.toFixed(1)}</div>
+              <div style="width: 15%;text-align: center">${rank.gift_total.toFixed(0)}</div>
+              <div style="width: 15%;text-align: center">${rank.guard_total.toFixed(0)}</div>
+              <div style="width: 15%;text-align: center">${rank.super_chat_total.toFixed(0)}</div>
+              <div style="width: 15%;text-align: center">${rank.total.toFixed(0)}</div>
             `;
             rankingContainer.appendChild(listItem);
           });
